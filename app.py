@@ -43,3 +43,15 @@ if st.button("Search Product"):
             st.error("❌ Executable not found. Please ensure build.sh or compilation succeeded.")
     else:
         st.warning("Please enter a product name.")
+
+
+if not os.path.exists("ecommerce"):
+    st.info("🔧 Compiling C source files...")
+    try:
+        # Use shell=True so *.c expands correctly
+        subprocess.run("gcc src/*.c -Iinclude -o ecommerce", shell=True, check=True)
+        st.success("✅ Compilation successful! Ready to search.")
+    except subprocess.CalledProcessError as e:
+        st.error(f"❌ Compilation failed:\n{e}")
+        st.stop()
+
