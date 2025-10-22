@@ -1,0 +1,5 @@
+101,Laptop,55000,Electronics
+102,Mobile,15000,Electronics
+103,Shoes,2500,Fashion
+104,Watch,3500,Fashion
+105,Book,400,Education
