@@ -11,8 +11,8 @@ st.write("This demo runs the C-based Bloom Filter + Hash Table search engine bui
 if not os.path.exists("ecommerce"):
     st.info("🔧 Compiling C source files...")
     try:
-        # Compile all C files inside src/ and include headers
-        subprocess.run(["gcc", "src/*.c", "-Iinclude", "-o", "ecommerce"], shell=True, check=True)
+        # Use shell=True so *.c expands correctly in src/
+        subprocess.run("gcc src/*.c -Iinclude -o ecommerce", shell=True, check=True)
         st.success("✅ Compilation successful! Ready to search.")
     except subprocess.CalledProcessError as e:
         st.error(f"❌ Compilation failed:\n{e}")
@@ -40,18 +40,6 @@ if st.button("Search Product"):
             else:
                 st.code(output, language="text")
         except FileNotFoundError:
-            st.error("❌ Executable not found. Please ensure build.sh or compilation succeeded.")
+            st.error("❌ Executable not found. Please ensure compilation succeeded.")
     else:
         st.warning("Please enter a product name.")
-
-
-if not os.path.exists("ecommerce"):
-    st.info("🔧 Compiling C source files...")
-    try:
-        # Use shell=True so *.c expands correctly
-        subprocess.run("gcc src/*.c -Iinclude -o ecommerce", shell=True, check=True)
-        st.success("✅ Compilation successful! Ready to search.")
-    except subprocess.CalledProcessError as e:
-        st.error(f"❌ Compilation failed:\n{e}")
-        st.stop()
-
