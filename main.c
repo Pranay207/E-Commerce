@@ -18,12 +18,17 @@ int product_count = 0;
 
 // Convert string to lowercase
 void to_lowercase(char *str) {
-    for (int i = 0; str[i]; i++)
+    for(int i=0; str[i]; i++)
         str[i] = tolower(str[i]);
 }
 
-int main() {
-    FILE *fp = fopen("products.txt", "r");
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        printf("❌ Please provide products.txt path\n");
+        return 1;
+    }
+
+    FILE *fp = fopen(argv[1], "r");
     if (!fp) {
         printf("❌ Could not open products.txt\n");
         return 1;
@@ -58,12 +63,11 @@ int main() {
     query[strcspn(query, "\n")] = 0; // remove newline
     to_lowercase(query);
 
-    // Search products
     int found = 0;
-    for (int i = 0; i < product_count; i++) {
+    for (int i=0; i<product_count; i++) {
         if (strcmp(products[i].name, query) == 0) {
-            printf("✅ Found: %s | ₹%.2f | %s\n", 
-                products[i].name, products[i].price, products[i].category);
+            printf("✅ Found: %s | ₹%.2f | %s\n",
+                   products[i].name, products[i].price, products[i].category);
             found = 1;
             break;
         }
