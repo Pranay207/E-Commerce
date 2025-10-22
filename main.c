@@ -1,72 +1,76 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "bloom_filter.h"
-#include "hash_table.h"
+#include <ctype.h>
 
-#define MAX_LINE 256
+#define MAX_PRODUCTS 100
+#define MAX_LEN 100
+
+typedef struct {
+    int id;
+    char name[MAX_LEN];
+    float price;
+    char category[MAX_LEN];
+} Product;
+
+Product products[MAX_PRODUCTS];
+int product_count = 0;
+
+// Convert string to lowercase
+void to_lowercase(char *str) {
+    for (int i = 0; str[i]; i++)
+        str[i] = tolower(str[i]);
+}
 
 int main() {
-    BloomFilter bf;
-    HashTable ht;
-    init_bloom(&bf);
-    init_table(&ht);
-
-    FILE *fp = fopen("data/products.txt", "r");
+    FILE *fp = fopen("products.txt", "r");
     if (!fp) {
         printf("❌ Could not open products.txt\n");
         return 1;
     }
 
-    char line[MAX_LINE];
-    while (fgets(line, sizeof(line), fp)) {
-        Product p;
+    char line[256];
+    while (fgets(line, sizeof(line), fp) && product_count < MAX_PRODUCTS) {
         char *token = strtok(line, ",");
         if (!token) continue;
-        p.id = atoi(token);
+        products[product_count].id = atoi(token);
 
         token = strtok(NULL, ",");
         if (!token) continue;
-        strcpy(p.name, token);
+        strcpy(products[product_count].name, token);
+        to_lowercase(products[product_count].name);
 
         token = strtok(NULL, ",");
         if (!token) continue;
-        p.price = atof(token);
+        products[product_count].price = atof(token);
 
         token = strtok(NULL, ",\n");
         if (!token) continue;
-        strcpy(p.category, token);
+        strcpy(products[product_count].category, token);
 
-        // Insert into Bloom filter & hash table
-        insert_bloom(&bf, p.name);
-        insert_product(&ht, p);
+        product_count++;
     }
     fclose(fp);
 
-    char query[100];
+    char query[MAX_LEN];
     printf("Enter product name to search: ");
     fgets(query, sizeof(query), stdin);
-    query[strcspn(query, "\n")] = 0; // Remove newline
+    query[strcspn(query, "\n")] = 0; // remove newline
+    to_lowercase(query);
 
-    // Case-insensitive search
-    char query_lower[100];
-    for(int i=0; query[i]; i++) query_lower[i] = tolower(query[i]);
-    query_lower[strlen(query)] = 0;
-
-    int found_in_bloom = 0;
-    for(int i=0; i<strlen(query); i++) query[i] = tolower(query[i]); // lowercase for bloom
-    if (search_bloom(&bf, query)) found_in_bloom = 1;
-
-    if (found_in_bloom) {
-        Product *result = search_product(&ht, query);
-        if (result)
-            printf("\\n✅ Found: %s | ₹%.2f | %s\\n", result->name, result->price, result->category);
-        else
-            printf("\\n⚠️ False Positive: Product not found.\\n");
-    } else {
-        printf("\\n❌ Product definitely not in catalog.\\n");
+    // Search products
+    int found = 0;
+    for (int i = 0; i < product_count; i++) {
+        if (strcmp(products[i].name, query) == 0) {
+            printf("✅ Found: %s | ₹%.2f | %s\n", 
+                products[i].name, products[i].price, products[i].category);
+            found = 1;
+            break;
+        }
     }
+
+    if (!found)
+        printf("❌ Product definitely not in catalog.\n");
 
     return 0;
 }
-
