@@ -5,26 +5,28 @@ import os
 st.set_page_config(page_title="E-Commerce Search Engine", page_icon="🛍️")
 st.title("🛒 E-Commerce Product Catalog Search Engine")
 
-# Absolute path of products.txt
-data_file = os.path.join(os.path.dirname(__file__), "products.txt")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+C_FILE = os.path.join(BASE_DIR, "main.c")
+EXECUTABLE = os.path.join(BASE_DIR, "ecommerce")
 
-# Compile C code if not compiled
-if not os.path.exists("ecommerce"):
-    st.info("🔧 Compiling C code...")
+# Compile C code if executable not exists
+if not os.path.exists(EXECUTABLE):
+    st.info("🔧 Compiling C program...")
     try:
-        subprocess.run(f"gcc main.c -o ecommerce", shell=True, check=True)
+        subprocess.run(f"gcc {C_FILE} -o {EXECUTABLE}", shell=True, check=True)
         st.success("✅ Compilation successful!")
     except subprocess.CalledProcessError as e:
         st.error(f"❌ Compilation failed:\n{e}")
         st.stop()
 
 # Input box
-query = st.text_input("Enter product name to search:")
+query = st.text_input("Enter product name:")
 
+# Run the program
 if st.button("Search Product") and query.strip():
     try:
         process = subprocess.Popen(
-            ["./ecommerce", data_file],  # pass products.txt path as argument
+            [EXECUTABLE],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -37,4 +39,3 @@ if st.button("Search Product") and query.strip():
             st.code(output)
     except FileNotFoundError:
         st.error("❌ Executable not found. Compilation might have failed.")
-
