@@ -1,7 +1,7 @@
 Laptop,Electronics,$1000,High-performance laptop
 Phone,Electronics,$500,Smartphone with camera
 Headphones,Electronics,$50,Noise-cancelling headphones
-Watch,Accessories,$150,Smart watch
+Watches,Accessories,$150,Smart watch
 Camera,Electronics,$700,DSLR camera
 Shoes,Fashion,$80,Running shoes
 Bag,Fashion,$60,Leather bag
