@@ -1,5 +1,10 @@
-101,Laptop,55000,Electronics
-102,Mobile,15000,Electronics
-103,Shoes,2500,Fashion
-104,Watch,3500,Fashion
-105,Book,400,Education
+Laptop,Electronics,$1000,High-performance laptop
+Phone,Electronics,$500,Smartphone with camera
+Headphones,Electronics,$50,Noise-cancelling headphones
+Watch,Accessories,$150,Smart watch
+Camera,Electronics,$700,DSLR camera
+Shoes,Fashion,$80,Running shoes
+Bag,Fashion,$60,Leather bag
+Tablet,Electronics,$300,10-inch tablet
+Keyboard,Electronics,$30,Mechanical keyboard
+Mouse,Electronics,$25,Wireless mouse
